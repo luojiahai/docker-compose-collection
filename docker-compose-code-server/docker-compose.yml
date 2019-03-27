@@ -1,0 +1,11 @@
+version: '2'
+services:
+  code-server:
+    container_name: code-server
+    image: codercom/code-server
+    restart: always
+    ports:
+     - "8443:8443"
+    command: bash -c "code-server --allow-http --password={PASSWORD}" 
+    volumes:
+     - ./projects:/root/projects
