@@ -6,6 +6,6 @@ services:
     restart: always
     ports:
      - "8443:8443"
-    command: bash -c "code-server --allow-http --password={PASSWORD}" 
+    command: --allow-http --password={PASSWORD}
     volumes:
-     - ./projects:/root/projects
+     - ./project:/root/project
