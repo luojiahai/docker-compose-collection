@@ -8,4 +8,4 @@ services:
      - "8443:8443"
     command: --allow-http --password={PASSWORD}
     volumes:
-     - ./project:/root/project
+     - ./project:/home/coder/project
