@@ -1,0 +1,2 @@
+DB_ROOT_PASSWORD=password
+DB_NAME=wordpress
