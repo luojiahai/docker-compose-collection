@@ -1,0 +1,73 @@
+version: "2"
+
+services:
+
+  ghost:
+    image: ghost
+    volumes:
+      - ghostdata:/var/lib/ghost/content
+    environment:
+      - url=https://example.com
+      - database__client=mysql
+      - database__connection__host=db
+      - database__connection__user=ghostdb
+      - database__connection__password=secret
+      - database__connection__database=ghostdb
+      - VIRTUAL_HOST=example.com
+      - DEFAULT_HOST=example.com
+      - VIRTUAL_PORT=2368
+      - LETSENCRYPT_HOST=example.com
+      - LETSENCRYPT_EMAIL=user@example.com
+    networks:
+      - ghost
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  db:
+    image: mariadb
+    volumes:
+      - ghostdb:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=supersecret
+      - MYSQL_DATABASE=ghostdb
+      - MYSQL_USER=ghostdb
+      - MYSQL_PASSWORD=secret
+    networks:
+      - ghost
+    restart: unless-stopped
+
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    volumes: 
+      - certs:/etc/nginx/certs:ro
+      - /etc/nginx/vhost.d
+      - /usr/share/nginx/html
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - ghost
+    labels:
+      com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: ""
+    restart: unless-stopped
+
+  letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    volumes:
+      - certs:/etc/nginx/certs
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    volumes_from:
+      - nginx-proxy
+    networks:
+      - ghost
+    restart: unless-stopped
+
+volumes:
+  certs:
+  ghostdb:
+  ghostdata:
+
+networks:
+  ghost:
