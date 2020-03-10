@@ -7,17 +7,17 @@ services:
     volumes:
       - ghostdata:/var/lib/ghost/content
     environment:
-      - url=https://example.com
+      - url={https://example.com}
       - database__client=mysql
       - database__connection__host=db
       - database__connection__user=ghostdb
-      - database__connection__password=secret
+      - database__connection__password={secret}
       - database__connection__database=ghostdb
-      - VIRTUAL_HOST=example.com
-      - DEFAULT_HOST=example.com
+      - VIRTUAL_HOST={example.com}
+      - DEFAULT_HOST={example.com}
       - VIRTUAL_PORT=2368
-      - LETSENCRYPT_HOST=example.com
-      - LETSENCRYPT_EMAIL=user@example.com
+      - LETSENCRYPT_HOST={example.com}
+      - LETSENCRYPT_EMAIL={user@example.com}
     networks:
       - ghost
     depends_on:
@@ -29,10 +29,10 @@ services:
     volumes:
       - ghostdb:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=supersecret
+      - MYSQL_ROOT_PASSWORD={supersecret}
       - MYSQL_DATABASE=ghostdb
       - MYSQL_USER=ghostdb
-      - MYSQL_PASSWORD=secret
+      - MYSQL_PASSWORD={secret}
     networks:
       - ghost
     restart: unless-stopped
